@@ -22,8 +22,17 @@ app.get('/', (req, res) =>{
     res.send('index')
 });
 
-app.post('/user/login', registerValidation, (req, res) =>{
-    res.send('Login');
+app.post('/user/login', registerValidation, async(req, res) =>{
+    try {
+        const user = await UserModel.findOne({email: req.body.email});
+        if (!user){
+            return req.status(404).json({
+                message: 'Неверные данные'
+            })
+        }
+    } catch (error) {
+        
+    }
 })
 
 app.post('/auth/register', registerValidation,  async (req, res) =>{
