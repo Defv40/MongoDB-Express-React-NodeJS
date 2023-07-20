@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 
-var Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-var UserSchema = new Schema({
+const UserSchema = new Schema({
     fullName:{
         type: String,
         required: true
@@ -23,6 +23,6 @@ var UserSchema = new Schema({
 // Compile model from schema
 
 // Compile model from schema
-var userModel = mongoose.model('User', SomeModelSchema );
+const UserModel = mongoose.model('User', UserSchema );
 
-export default userModel;
+export default UserModel;
