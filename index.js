@@ -1,5 +1,5 @@
 import express from "express";
-
+import multer from "multer";
 import mongoose from "mongoose";
 import * as Auth from "./validations/auth.js";
 
@@ -23,8 +23,26 @@ mongoose
 
 const app = express();
 
-app.use(express.json()); // учим читать json
 
+const storage = multer.diskStorage({
+  destination: (_, __, cb) =>{
+    cb(null, 'uploads');
+  },
+  filename: (_, file, cb) =>{
+    cb(null, file.originalname);
+  }
+});
+
+const upload = multer({storage});
+
+app.post('/upload', checkAuth, upload.single('image'), (req, res) =>{
+  res.status(200).json({
+    url: `/uploads/${req.file.originalname}`
+  })
+});
+
+app.use(express.json()); // учим читать json
+app.use('/uploads', express.static('uploads'));
 app.get("/", (req, res) => {
   res.send("index");
 });
