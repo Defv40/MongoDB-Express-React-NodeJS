@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import { registerValidation } from "./validations/auth.js";
 import { validationResult } from "express-validator";
 import UserModel from "./models/User.js";
+import checkAuth from './utils/checkAuth.js';
 import bcrypt from "bcrypt";
 const username = "admin";
 const password = "pSOI234-zxcl";
@@ -100,11 +101,24 @@ app.post("/auth/register", registerValidation, async (req, res) => {
   }
 });
 
-app.get('auth/me', (req, res) =>{
+app.get('/auth/me', checkAuth, async (req, res) =>{
     try {
-        
+        const user = await UserModel.findById(req.userId);
+        if (!user){
+            return res.status(404).json({
+                msg: "Пользователь не найден"
+            })
+        }
+
+        res.json({
+            ...user._doc,
+            msg: 'success'
+        })
     } catch (err) {
-        
+        console.log(err);
+        json.status(500).json({
+            msg: 'Нет доступа'
+        })
     }
 })
 
